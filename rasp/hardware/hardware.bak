@@ -290,7 +290,7 @@ F 3 "~" H 5050 4500 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 Text GLabel 5850 4550 2    50   Input ~ 0
-GPIO22(GEN3)
+GPIO22(GEN4)
 Wire Wire Line
 	5150 4150 5150 4300
 Text GLabel 4950 4150 0    50   Input ~ 0

@@ -3,7 +3,7 @@
   (general
     (thickness 1.6)
     (drawings 39)
-    (tracks 512)
+    (tracks 511)
     (zones 0)
     (modules 43)
     (nets 61)
@@ -223,15 +223,6 @@
     (add_net TXB)
     (add_net Trig0)
     (add_net Trig1)
-  )
-
-  (net_class DRC ""
-    (clearance 0.1)
-    (trace_width 0.16)
-    (via_dia 1.5)
-    (via_drill 0.6)
-    (uvia_dia 1.5)
-    (uvia_drill 0.6)
   )
 
   (net_class Power ""
@@ -1938,7 +1929,7 @@
     (fp_text reference MK4 (at 0 -3.7) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value M2.5 (at -0.032 3.7) (layer F.Fab)
+    (fp_text value M2.5 (at 0 3.7) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_circle (center 0 0) (end 2.95 0) (layer F.CrtYd) (width 0.05))
@@ -2133,10 +2124,9 @@
   (via (at 237.592 114.44) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
   (via (at 243.942 112.408) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
   (via (at 242.418 118.504) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
-  (via (at 221.082 89.04) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
+  (via (at 221.082 88.786) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
   (via (at 238.608 100.724) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
   (via (at 256.642 101.486) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
-  (via (at 248.006 144.158) (size 1.5) (drill 0.6) (layers F.Cu B.Cu) (net 3))
   (segment (start 236.3995 138.824) (end 236.987 138.824) (width 0.635) (layer B.Cu) (net 14))
   (segment (start 235.306 138.824) (end 236.3995 138.824) (width 0.635) (layer B.Cu) (net 14))
   (segment (start 234.036 137.554) (end 235.306 138.824) (width 0.635) (layer B.Cu) (net 14))
