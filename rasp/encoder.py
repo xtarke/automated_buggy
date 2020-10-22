@@ -1,35 +1,15 @@
-import pigpio
-import time
 
-# http://abyz.me.uk/rpi/pigpio/
 
-wheel_pulses = 20
-counter = 0
+lista_1 = ['programação', 'circuitos', 1997, 2000];
+lista_2 = [1, 2, 3, 4, 5 ];
+lista_3 = ["a", "b", "c", "d", "e"];
 
-def cbf(gpio, level, tick):
-    global counter
-    counter = counter + 1
+# print exibe todos os dados das listas
+print(lista_1)
+print(lista_2)
+print(lista_3)
 
-def main():
-    global counter
+# Podemos alterar itens individuais da lista (indexação)
+lista_1[0] = 'gosto de programacao'
+print(lista_1)
 
-    pi = pigpio.pi()
-    
-    if not pi.connected:
-      exit(0)
-
-    cb1 = pi.callback(26, pigpio.FALLING_EDGE, cbf)
-    
-    while True:
-        
-        time.sleep(1)
-        
-        # rpm = (60 * 1000 / wheel_pulses ) / (millis() - timeold) * counter;
-        rpm = (60 * 1000 / wheel_pulses ) / 1000 * counter;
-        counter = 0;
-        
-        print(rpm)
-    
-
-if __name__ == '__main__':
-    main()
