@@ -21,49 +21,22 @@
 
 import pigpio
 import time
-import motor
-import bateria
 
-
-def main():
-    print('Hello!')
-    print('Digite a direção: ')
-    print('p: parar')
-    print('r: ré')
-    print('e: esquerda')
-    print('p: direita')
-    print('q: sair')
+class Bateria:
+    """Classe para monitorar as baterias"""
         
-    pinos = pigpio.pi()
+    # Endereco I2c do 
+    endereco_i2c = 0x48
     
-    motores = motor.Motor(pinos)
-    baterias = bateria.Bateria(pinos)
+     
+    def __init__(self, pinos):
+        
+        self.pinos = pinos
+        
+        self.adc = pinos.i2c_open(1, self.endereco_i2c)
+        
+        
     
+        
     
-    dir = 's'
-    
-    while (dir != 'q'):
-        
-        dir = input()
-        
-        if dir == 'p':
-            motores.parar()
-            
-        if dir == 'f':
-            motores.mover_frente(75)
-        
-        if dir == 'r':
-            motores.mover_re(75)
-        
-        if dir == 'e':
-            motores.mover_esquerda(75)
-            
-        if dir == 'd':
-            motores.mover_direita(75)
-               
-    motores.parar()
-    print('Bye Bye!')    
-
-if __name__ == '__main__':
-    main()
-
+   
