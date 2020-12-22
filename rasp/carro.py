@@ -44,7 +44,7 @@ def main():
     
     while (dir != 'q'):
         
-        dir = input()
+        # dir = input()
         
         if dir == 'p':
             motores.parar()
@@ -60,10 +60,19 @@ def main():
             
         if dir == 'd':
             motores.mover_direita(75)
-               
+            
+            
+        baterias.ler_baterias()
+        
+        print("{:>5.3f}\t{:>5.3f}".format(baterias.bateria_1, baterias.bateria_2))
+        
+        time.sleep(1)
+        
+    
     motores.parar()
     print('Bye Bye!')    
 
 if __name__ == '__main__':
     main()
+
 

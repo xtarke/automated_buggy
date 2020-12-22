@@ -23,20 +23,60 @@ import pigpio
 import time
 
 class Bateria:
-    """Classe para monitorar as baterias"""
-        
-    # Endereco I2c do 
-    endereco_i2c = 0x48
+    """Classe para monitorar as baterias. Utiliza o módulo ADS115 conectado
+    no barramento I2C-1 do Raspberry Pi: /dev/i2c-1
+    Canal 0 (Ganho = 1/3) é a soma de ambas baterias e canal 1 (Ganho = 2/3) é bateria inferior
+    - Bateria 1: Canal 0 - Canal 1   
+    - Bateria 2: Canal 1
+    """
     
-     
+    ganho_pot_0 = float(1/3)
+    ganho_pot_1= float(2/3)
+    
+    ads115_configs = {'addr' : 0x48, 
+                      'data_reg': 0x00, 
+                      'config_reg': 0x01,              
+                      'cha_00': 0x83C3, 
+                      'cha_01': 0x83D3 }
+    
+    """ Registrador de configuração (16 bits):
+    Leitura do canal 0: 0x83C3
+    Leitura do canal 1: 0x83D3
+    
+    - Single shot
+    - FSR = 4.096 / 2 (+ ou -)
+    - ADC = Vin * 2**16   (sem ganho da placa de potência)
+            -----------
+             4.096 * 2 
+    """
+    
     def __init__(self, pinos):
         
-        self.pinos = pinos
+        self.pinos = pinos        
+        self.adc = pinos.i2c_open(1, self.ads115_configs['addr'])        
         
-        self.adc = pinos.i2c_open(1, self.endereco_i2c)
+    def ler_baterias(self):
+                          
+        self.ler_canal_0()
+        self.ler_canal_1()
         
+        self.bateria_2 = self.canal_1 * 4.096 * 2 / (2**16) / self.ganho_pot_1     
+        self.bateria_1 = self.canal_0 * 4.096 * 2 / (2**16) / self.ganho_pot_0 - self.bateria_2
+       
         
-    
+    def ler_canal_0(self):
+        self.pinos.i2c_write_word_data(self.adc, self.ads115_configs['config_reg'],
+                                       self.ads115_configs['cha_00'])     
+        read = self.pinos.i2c_read_word_data(self.adc,
+                                             self.ads115_configs['data_reg'])        
         
-    
-   
+        self.canal_0 = ((read >> 8) & 0xff00) | ((read << 8) & 0xff00)        
+               
+    def ler_canal_1(self):
+        self.pinos.i2c_write_word_data(self.adc, self.ads115_configs['config_reg'],
+                                       self.ads115_configs['cha_01'])     
+        read = self.pinos.i2c_read_word_data(self.adc,
+                                             self.ads115_configs['data_reg'])        
+        
+        self.canal_1 = ((read >> 8) & 0xff00) | ((read << 8) & 0xff00)   
+       
