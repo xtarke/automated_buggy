@@ -21,6 +21,25 @@
 
 import pigpio
 import time
+import threading, time
+from datetime import timedelta
+
+class Job(threading.Thread):
+    def __init__(self, interval, execute, *args, **kwargs):
+        threading.Thread.__init__(self)
+        self.daemon = False
+        self.stopped = threading.Event()
+        self.interval = interval
+        self.execute = execute
+        self.args = args
+        self.kwargs = kwargs
+        
+    def stop(self):
+                self.stopped.set()
+                self.join()
+    def run(self):
+            while not self.stopped.wait(self.interval.total_seconds()):
+                self.execute(*self.args, **self.kwargs)
 
 class Bateria:
     """Classe para monitorar as baterias. Utiliza o módulo ADS115 conectado
@@ -52,17 +71,26 @@ class Bateria:
     
     def __init__(self, pinos):
         
-        self.pinos = pinos        
+        self.pinos = pinos
+        self.bateria_1 = 0
+        self.bateria_2 = 0
         self.adc = pinos.i2c_open(1, self.ads115_configs['addr'])        
+        self.job = Job(interval=timedelta(seconds=0.5), execute=self.ler_baterias)
         
+    def iniciar(self):
+        self.job.start()
+        
+    def parar(self):
+        self.job.stop()
+          
     def ler_baterias(self):
-                          
         self.ler_canal_0()
         self.ler_canal_1()
-        
+                          
         self.bateria_2 = self.canal_1 * 4.096 * 2 / (2**16) / self.ganho_pot_1     
         self.bateria_1 = self.canal_0 * 4.096 * 2 / (2**16) / self.ganho_pot_0 - self.bateria_2
        
+        # print("{:>5.3f}\t{:>5.3f}".format(self.bateria_1, self.bateria_2))
         
     def ler_canal_0(self):
         self.pinos.i2c_write_word_data(self.adc, self.ads115_configs['config_reg'],

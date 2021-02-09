@@ -23,6 +23,7 @@ import pigpio
 import time
 import motor
 import bateria
+import encoder
 
 
 def main():
@@ -36,24 +37,28 @@ def main():
         
     pinos = pigpio.pi()
     
+    encoder_1 = encoder.Encoder(5)
+    encoder_1.iniciar()
+    
     motores = motor.Motor(pinos)
     baterias = bateria.Bateria(pinos)
+    baterias.iniciar()
     
     
     dir = 's'
     
     while (dir != 'q'):
         
-        # dir = input()
+        dir = input()
         
         if dir == 'p':
             motores.parar()
             
         if dir == 'f':
-            motores.mover_frente(75)
+            motores.mover_frente(100)
         
         if dir == 'r':
-            motores.mover_re(75)
+            motores.mover_re(40)
         
         if dir == 'e':
             motores.mover_esquerda(75)
@@ -62,14 +67,15 @@ def main():
             motores.mover_direita(75)
             
             
-        baterias.ler_baterias()
+        # baterias.ler_baterias()
         
-        print("{:>5.3f}\t{:>5.3f}".format(baterias.bateria_1, baterias.bateria_2))
+        # print("{:>5.3f}\t{:>5.3f}".format(baterias.bateria_1, baterias.bateria_2))
         
-        time.sleep(1)
+        # time.sleep(1)
         
-    
+    baterias.parar()
     motores.parar()
+    encoder_1.parar()
     print('Bye Bye!')    
 
 if __name__ == '__main__':
