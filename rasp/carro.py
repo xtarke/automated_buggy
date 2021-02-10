@@ -37,7 +37,7 @@ def main():
         
     pinos = pigpio.pi()
     
-    encoder_1 = encoder.Encoder(5)
+    encoder_1 = encoder.Encoder(pinos,5)
     encoder_1.iniciar()
     
     motores = motor.Motor(pinos)

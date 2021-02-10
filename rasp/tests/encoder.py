@@ -1,15 +1,30 @@
+import pigpio, time
 
+def onChange(gpio,level,tick):
+    global data_level
+    global phrase, init
+    global count, correct_count
 
-lista_1 = ['programação', 'circuitos', 1997, 2000];
-lista_2 = [1, 2, 3, 4, 5 ];
-lista_3 = ["a", "b", "c", "d", "e"];
+    count = count + 1
+    
 
-# print exibe todos os dados das listas
-print(lista_1)
-print(lista_2)
-print(lista_3)
+if __name__ == '__main__':
+   
+   CLK_pin=5
+   
+   phrase=""
+   data_level = 0
 
-# Podemos alterar itens individuais da lista (indexação)
-lista_1[0] = 'gosto de programacao'
-print(lista_1)
+   count = 0
+   correct_count = 0
+   init = False
+   
+   pi = pigpio.pi()
+   pi.set_mode(CLK_pin, pigpio.INPUT)
+  
+   cb1 = pi.callback(CLK_pin, pigpio.RISING_EDGE, onChange)
+   
+   print('Start Benchmark')
+   time.sleep(1)
 
+   print('Frequency XX:',count,'-',correct_count)

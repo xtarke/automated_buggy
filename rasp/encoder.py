@@ -25,7 +25,7 @@
 # https://roboticsbackend.com/raspberry-pi-gpio-interrupts-tutorial/
 
 import sys
-import RPi.GPIO as GPIO
+import pigpio
 import time
 import threading, time
 from datetime import timedelta
@@ -57,52 +57,30 @@ class Encoder:
     delta = 0
     velocidade = 0
     
-    def __init__(self, pino):        
-        self.pino_encoder = pino
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.pino_encoder, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    def __init__(self, classe_pigpio, pino):
+        self.pino_encoder = pino       
+        self.pigpio_local = classe_pigpio       
         
-        GPIO.add_event_detect(self.pino_encoder, GPIO.FALLING, 
-            callback=self.callback_pulsos, bouncetime=15)
+        self.pigpio_local.set_mode(self.pino_encoder, pigpio.INPUT)
+        self.callback = self.pigpio_local.callback(self.pino_encoder,
+                                                   pigpio.RISING_EDGE, self.callback_pulsos)
         
-        self.job = Job(interval=timedelta(seconds=1), execute=self.velocidade_thread)
+        self.job = Job(interval=timedelta(seconds=0.5), execute=self.velocidade_thread)
         
-    
     def velocidade_thread(self):
-        
-        # print(self.pulsos)
         
         self.velocidade = self.pulsos - self.delta        
         self.delta = self.pulsos        
-        self.velocidade = self.velocidade 
+        self.velocidade = self.velocidade * 2
         
         print(self.velocidade)
-        
-        
+         
     def iniciar(self):
         self.job.start()
     
     def parar(self):
         self.job.stop()
-        GPIO.cleanup()
 
-    def callback_pulsos(self, channel):
+    def callback_pulsos(self, gpio,level,tick):
         self.pulsos = self.pulsos + 1
     
-#
-#def signal_handler(sig, frame):
-#    GPIO.cleanup()
-#    sys.exit(0)
-#
-#def button_pressed_callback(channel):
-#    print("Pulse detected!")
-#
-#if __name__ == '__main__':
-#    GPIO.setmode(GPIO.BCM)
-#    GPIO.setup(BUTTON_GPIO, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-#
-#    GPIO.add_event_detect(BUTTON_GPIO, GPIO.FALLING, 
-#            callback=button_pressed_callback, bouncetime=100)
-#    
-#    signal.signal(signal.SIGINT, signal_handler)
-#    signal.pause()

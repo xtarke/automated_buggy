@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:hardware-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -1468,7 +1467,7 @@ $EndComp
 Wire Wire Line
 	2950 3250 2950 3450
 $Comp
-L Charleslabs_Parts:ADS1115_ADC_Module A1
+L hardware-rescue:ADS1115_ADC_Module-Charleslabs_Parts A1
 U 1 1 5F6D8D72
 P 2950 3950
 F 0 "A1" H 3400 3800 50  0000 L CNN
