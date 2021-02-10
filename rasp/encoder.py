@@ -21,9 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# See:
-# https://roboticsbackend.com/raspberry-pi-gpio-interrupts-tutorial/
-
 import sys
 import pigpio
 import time
