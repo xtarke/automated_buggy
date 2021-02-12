@@ -50,7 +50,6 @@ class Encoder:
     """
 
     pino_encoder = 5
-    pulsos = 0
     delta = 0
     velocidade = 0
     
@@ -60,24 +59,28 @@ class Encoder:
         
         self.pigpio_local.set_mode(self.pino_encoder, pigpio.INPUT)
         self.callback = self.pigpio_local.callback(self.pino_encoder,
-                                                   pigpio.RISING_EDGE, self.callback_pulsos)
+                                                   pigpio.RISING_EDGE)
         
         self.job = Job(interval=timedelta(seconds=0.5), execute=self.velocidade_thread)
         
     def velocidade_thread(self):
         
-        self.velocidade = self.pulsos - self.delta        
-        self.delta = self.pulsos        
+        pulsos = self.callback.tally()        
+        self.velocidade = pulsos - self.delta        
+        self.delta = pulsos
+        # Ajustar * x (velocidade) em função do tempo da thread
+        # v = n_pulsos / t (pulsos/s)
         self.velocidade = self.velocidade * 2
         
-        print(self.velocidade)
+        # Debug
+        # print(self.velocidade)
+        
+    def obter(self):
+        return self.velocidade
          
     def iniciar(self):
         self.job.start()
     
     def parar(self):
         self.job.stop()
-
-    def callback_pulsos(self, gpio,level,tick):
-        self.pulsos = self.pulsos + 1
-    
+        self.callback.cancel()

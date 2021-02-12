@@ -24,6 +24,7 @@ import time
 import motor
 import bateria
 import encoder
+import sensor_linha
 
 
 def main():
@@ -40,11 +41,13 @@ def main():
     encoder_1 = encoder.Encoder(pinos,5)
     encoder_1.iniciar()
     
+    esquerda = sensor_linha.Sensor_linha(pinos, 8)
+    direita = sensor_linha.Sensor_linha(pinos, 7)
+    
     motores = motor.Motor(pinos)
     baterias = bateria.Bateria(pinos)
     baterias.iniciar()
-    
-    
+        
     dir = 's'
     
     while (dir != 'q'):
@@ -76,6 +79,8 @@ def main():
     baterias.parar()
     motores.parar()
     encoder_1.parar()
+    esquerda.parar()
+    direita.parar()
     print('Bye Bye!')    
 
 if __name__ == '__main__':
