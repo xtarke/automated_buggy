@@ -35,11 +35,11 @@ class Job(threading.Thread):
         self.kwargs = kwargs
         
     def stop(self):
-                self.stopped.set()
-                self.join()
+        self.stopped.set()
+        self.join()
     def run(self):
-            while not self.stopped.wait(self.interval.total_seconds()):
-                self.execute(*self.args, **self.kwargs)
+        while not self.stopped.wait(self.interval.total_seconds()):
+            self.execute(*self.args, **self.kwargs)
 
 class Bateria:
     """Classe para monitorar as baterias. Utiliza o módulo ADS115 conectado

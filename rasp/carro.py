@@ -25,6 +25,37 @@ import motor
 import bateria
 import encoder
 import sensor_linha
+import ultrassom
+
+import threading, time
+from datetime import timedelta
+
+class Job(threading.Thread):
+    def __init__(self, interval, execute, *args, **kwargs):
+        threading.Thread.__init__(self)
+        self.daemon = False
+        self.stopped = threading.Event()
+        self.interval = interval
+        self.execute = execute
+        self.args = args
+        self.kwargs = kwargs
+        
+    def stop(self):
+        self.stopped.set()
+        self.join()
+    def run(self):
+        while not self.stopped.wait(self.interval.total_seconds()):
+            self.execute(*self.args, **self.kwargs)
+
+def mostrar_sensores(): # , sensor_esquerdo, sensor_direito, ultrasssom):
+    
+    print('oi')
+    
+    distancia = ultrassom_1.obter()
+    #baterias = ultrasssom.obter()
+    #sensor_esquerdo
+    
+    
 
 
 def main():
@@ -41,14 +72,23 @@ def main():
     encoder_1 = encoder.Encoder(pinos,5)
     encoder_1.iniciar()
     
+    global ultrassom_1 = ultrassom.Ultrassom(pinos, 24, 22)
+    ultrassom_1.iniciar()
+    
     esquerda = sensor_linha.Sensor_linha(pinos, 8)
     direita = sensor_linha.Sensor_linha(pinos, 7)
     
     motores = motor.Motor(pinos)
     baterias = bateria.Bateria(pinos)
     baterias.iniciar()
-        
+    
+    sensores_debug = Job(interval=timedelta(seconds=1), execute=mostrar_sensores)
+    
+    sensores_debug.start()
+    
     dir = 's'
+    
+    # motores.mover_frente(100)
     
     while (dir != 'q'):
         
@@ -69,18 +109,20 @@ def main():
         if dir == 'd':
             motores.mover_direita(75)
             
-            
-        # baterias.ler_baterias()
-        
         # print("{:>5.3f}\t{:>5.3f}".format(baterias.bateria_1, baterias.bateria_2))
         
-        # time.sleep(1)
+        time.sleep(1)        
+        
         
     baterias.parar()
     motores.parar()
     encoder_1.parar()
     esquerda.parar()
     direita.parar()
+    ultrassom_1.parar()
+    
+    sensores_debug.stop()
+    
     print('Bye Bye!')    
 
 if __name__ == '__main__':
