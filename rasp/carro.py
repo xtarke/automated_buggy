@@ -30,34 +30,22 @@ import ultrassom
 import threading, time
 from datetime import timedelta
 
-class Job(threading.Thread):
-    def __init__(self, interval, execute, *args, **kwargs):
-        threading.Thread.__init__(self)
-        self.daemon = False
-        self.stopped = threading.Event()
-        self.interval = interval
-        self.execute = execute
-        self.args = args
-        self.kwargs = kwargs
+
+def mostrar_sensores(ultrassom, encoder, esquerda, direita, baterias, stop):
+    
+    while (stop() != True):    
+        distancia = ultrassom.obter()
+        velocidade = encoder.obter()
+        linha_e = esquerda.obter()
+        linha_d = direita.obter()
+        bat_1 = baterias.obter(1)
+        bat_2 = baterias.obter(2)
         
-    def stop(self):
-        self.stopped.set()
-        self.join()
-    def run(self):
-        while not self.stopped.wait(self.interval.total_seconds()):
-            self.execute(*self.args, **self.kwargs)
-
-def mostrar_sensores(): # , sensor_esquerdo, sensor_direito, ultrasssom):
+        print("{:>5.3f}\t{:>5.3f}\t{:>d}\t{:>d}\t{:>5.3f}\t{:>5.3f}".format(distancia, velocidade, linha_e, linha_d, bat_1, bat_2))
+              
+        time.sleep(1)
+   
     
-    print('oi')
-    
-    distancia = ultrassom_1.obter()
-    #baterias = ultrasssom.obter()
-    #sensor_esquerdo
-    
-    
-
-
 def main():
     print('Hello!')
     print('Digite a direção: ')
@@ -72,7 +60,7 @@ def main():
     encoder_1 = encoder.Encoder(pinos,5)
     encoder_1.iniciar()
     
-    global ultrassom_1 = ultrassom.Ultrassom(pinos, 24, 22)
+    ultrassom_1 = ultrassom.Ultrassom(pinos, 24, 22)
     ultrassom_1.iniciar()
     
     esquerda = sensor_linha.Sensor_linha(pinos, 8)
@@ -82,8 +70,8 @@ def main():
     baterias = bateria.Bateria(pinos)
     baterias.iniciar()
     
-    sensores_debug = Job(interval=timedelta(seconds=1), execute=mostrar_sensores)
-    
+    stop = False
+    sensores_debug = threading.Thread(target=mostrar_sensores, args=(ultrassom_1, encoder_1, esquerda, direita, baterias, lambda: stop));       
     sensores_debug.start()
     
     dir = 's'
@@ -121,7 +109,8 @@ def main():
     direita.parar()
     ultrassom_1.parar()
     
-    sensores_debug.stop()
+    stop = True
+    sensores_debug.join()
     
     print('Bye Bye!')    
 

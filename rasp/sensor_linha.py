@@ -30,7 +30,7 @@ class Sensor_linha:
     na frente do carrinho
     """
     pino_ = 5
-    estado = 0
+    estado = 1
         
     def __init__(self, classe_pigpio, pino):
         self.pino_ = pino       
@@ -42,12 +42,12 @@ class Sensor_linha:
                                                    pigpio.EITHER_EDGE, self.onChange)
          
     def onChange(self, gpio,level,tick):
-        estado = level        
+        self.estado = level        
         #debug
         #print(estado)
         
-    def ler(self):
-        return estado
+    def obter(self):
+        return self.estado
     
     def parar(self):        
         self.callback.cancel()

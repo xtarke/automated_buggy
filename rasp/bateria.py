@@ -82,6 +82,12 @@ class Bateria:
         
     def parar(self):
         self.job.stop()
+        
+    def obter(self, n):
+        if n == 1:
+            return self.bateria_1
+        else:
+            return self.bateria_2        
           
     def ler_baterias(self):
         self.ler_canal_0()
