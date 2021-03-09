@@ -1,6 +1,6 @@
 # Interface shield
 
-This shield connects Arduino Uno pins to the car's power board. Go to [Power Board](https://github.com/xtarke/avrlibs/tree/master/shields/carrinho_potencia) for more hardware information.
+This shield connects Arduino Uno pins to the car's power board. Go to [Power Board](hhttps://github.com/xtarke/automated_buggy/tree/master/power_board) for more hardware information.
 
 See [this schematic](schematic.pdf).
 
