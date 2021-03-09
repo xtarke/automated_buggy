@@ -1,4 +1,4 @@
-# Placa de potência para Buggy AWD
+# Buggy AWD
 
 Baseado em [Projeto PI3](https://github.com/luscasos/PI3-carro) de __Lucas Odair Silva.__
 
@@ -9,8 +9,8 @@ Baseado em [Projeto PI3](https://github.com/luscasos/PI3-carro) de __Lucas Odair
 Projeto da placa eletrônica de potência para o acionamento de um Buggy 4x4. Um conector de 26-vias faz a conexão das seguintes placas:
 
 - [Arduino Uno](./arduino/shield/)
-- [MSP-EXP430G2](./shield_exp430g2)
-- [MSP-EXP430FR2355](./shield_exp430fr2355)
+- [MSP-EXP430G2](./msp430/shield_exp430g2)
+- [MSP-EXP430FR2355](./msp430/shield_exp430fr2355)
 - [Raspberry Pi](./rasp/)
 
 ## Características
