@@ -4,12 +4,6 @@ This shield connects Arduino Uno pins to the car's power board. Go to [Power Boa
 
 See [this schematic](schematic.pdf).
 
-![Board](./board.png)
-
-![Board](./3d_complete.png)
-
-![Board](./3d_complete_side.png)
-
 ## Analog pins
 
 | Analog input  | Arduino pin  | Board label  | Signal |
@@ -38,7 +32,7 @@ See [this schematic](schematic.pdf).
 | 11         | PWM2  |  M2          |
 | 3          | PWM2N |  M2N         |
 
-## Espeed econder
+## Speed econder
 
 | Arduino Pin | Signal |  Board label |
 | ----------- | ------ | ------------ |
@@ -58,3 +52,9 @@ See [this schematic](schematic.pdf).
 | ------- | ------ |
 | TX      | TX     |
 | RX      | RX     |
+
+![Board](./shield/board.png)
+
+![Board](./shield/3d_complete.png)
+
+![Board](./shield/3d_complete_side.png)
