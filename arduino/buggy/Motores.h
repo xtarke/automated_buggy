@@ -13,13 +13,14 @@ class Motores
   public:
     Motores();
     
-    void frente();
-    void tras();
-    void esquerda();
-    void direita();
+    void frente(unsigned char velocidade);
+    void tras(unsigned char velocidade);
+    void esquerda(unsigned char velocidade);
+    void direita(unsigned char velocidade);
     void parar();
     
   private:
+    /* Pinos de hardware. Suportam analogWrite() */
     enum pins {M1 = 6, M1N = 5, M2 = 11, M2N = 3};
 };
 
