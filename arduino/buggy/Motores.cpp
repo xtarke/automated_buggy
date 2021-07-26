@@ -28,8 +28,8 @@ void Motores::parar()
 void Motores::frente(unsigned char velocidade){
   parar();
 
-  /* digitalWrite(M1, HIGH);  
-   * digitalWrite(M2, HIGH);   */
+  /*digitalWrite(M1, HIGH);  
+  digitalWrite(M2, HIGH); */
   velocidade &= 0xff;
 
   analogWrite(M1, velocidade);

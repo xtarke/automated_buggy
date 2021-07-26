@@ -1,5 +1,5 @@
 /*
-  Ultrassom.h - Biblioteca para mediação de distância usando HC-motores do Buggy 4x4.
+  Ultrassom.h - Biblioteca para medição de distância usando HC-SR04 para buggy 4x4.
   Created by Renan Augusto Starke, July 22, 2021.
   Released into the public domain.
 */
