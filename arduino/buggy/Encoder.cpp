@@ -6,12 +6,17 @@
 
 #include "Encoder.h"
 
-unsigned long Encoder::pulsos = 0;
+/* Cabeçalhos e vetores de interrupções: código low level para PCINTs */
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+unsigned long Encoder::pulsos_d0 = 0;
+unsigned long Encoder::pulsos_d1 = 0;
 
 Encoder::Encoder(unsigned char pino)
 {
   /* Configuração dos pinos */
-  pinMode(pino, INPUT);
+  pinMode(pino, INPUT_PULLUP);
 
   tempo = 0;
   
@@ -19,36 +24,63 @@ Encoder::Encoder(unsigned char pino)
   _pino = pino;
   
   /* Contagem dos pulsos */  
-  pulsos = 0;
-  
-  attachInterrupt(pino, Encoder::contador, FALLING);  
+  pulsos_d0 = 0;
+  pulsos_d1 = 0;
+
+  /* attachInterrupt: implementado apenas para IRQ externa 0 e 1 
+   * attachInterrupt(pino, Encoder::contador, FALLING);  
+   *
+   *  Pinos D0 e D1 estão mapeados em PCINT4(PB4) e PCINT5 (PB5)   */
+  if (pino == Encoder::D0)
+    PCMSK0 |= (1 << PCINT5);
+  else
+    PCMSK0 |= (1 << PCINT4);
+   
+  PCICR |= 1 << PCIE0;  
 }
 
-void Encoder::contador(){
-    pulsos++;
+/* PCINT deve-se testar qual pino gerou a IRQ */
+ISR(PCINT0_vect)
+{
+  /* Teste para D0 */
+  if (PINB & (1 << PB5))
+    Encoder::pulsos_d0++;
 
-     Serial.print('OI');
+  /* Teste para D1 */
+  if (PINB & (1 << PB4))
+    Encoder::pulsos_d1++;
 }
 
 void Encoder::atualizar(){
+  unsigned long pulsos = 0;
   
   /* Mede a velocidade a cada 1000 ms */
   if (millis() - tempo >= 1000)
   {
-    //Desabilita interrupcao durante o calculo
-    detachInterrupt(_pino);
-    
+    /* Desabilita interrupcao durante o calculo */       
+    if (_pino == Encoder::D0){
+      /* Desabilita interrupcao durante o calculo */
+      PCMSK0 &= ~(1 << PCINT5);
+      pulsos = pulsos_d0;
+      pulsos_d0 = 0;
+    }
+    else {
+      PCMSK0 &= ~(1 << PCINT4);
+      pulsos = pulsos_d1;
+      pulsos_d1 = 0;
+    }
+      
     /* velocidade = (60 * 1000 / pulsos_por_volta ) / (millis() - tempo) * pulsos; */
-    //velocidade = pulsos / (millis() - tempo);
-    
+    velocidade = pulsos / (millis() - tempo);          //Rever: usar 500ms para multipliar por 2
     tempo = millis();
-    pulsos = 0;    
 
-    attachInterrupt(_pino, Encoder::contador, FALLING);  
+    if (_pino == Encoder::D0)
+      PCMSK0 |= (1 << PCINT5);
+    else
+      PCMSK0 |= (1 << PCINT4);    
   }  
 }
 
 unsigned long Encoder::obter_velocidade(){
   return velocidade;
 }
-

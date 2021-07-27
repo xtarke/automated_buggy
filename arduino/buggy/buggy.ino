@@ -6,9 +6,9 @@
 
 
 Motores mot;
-//Ultrassom sensor_1(Ultrassom::ECHO1, Ultrassom::TRIG1);
-Encoder enc_1 (Encoder::D0);
-
+Ultrassom sensor_1(Ultrassom::ECHO1, Ultrassom::TRIG1);
+Encoder enc_1 (Encoder::D1);
+Encoder enc_0 (Encoder::D0);
 
 int teste = 0;
 
@@ -51,7 +51,7 @@ void loop() {
 
 
   if (millis() - timeold >= 1000){
-    Serial.println(enc_1.obter_velocidade());
+    //Serial.println(enc_1.obter_velocidade());
     timeold = millis();
   }
 

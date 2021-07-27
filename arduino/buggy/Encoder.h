@@ -11,7 +11,8 @@
 class Encoder
 {
   public:
-    static unsigned long pulsos;
+    static unsigned long pulsos_d0;
+    static unsigned long pulsos_d1;
     
     Encoder(unsigned char pino);
     unsigned long obter_velocidade();
@@ -23,11 +24,7 @@ class Encoder
     unsigned char _pino;          
     unsigned long velocidade;    
     unsigned long tempo;
-
-    static void contador();
-    
-    
-
+ 
 };
 
 #endif
