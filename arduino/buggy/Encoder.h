@@ -11,8 +11,8 @@
 class Encoder
 {
   public:
-    static unsigned long pulsos_d0;
-    static unsigned long pulsos_d1;
+    static volatile unsigned long pulsos_d0;
+    static volatile unsigned long pulsos_d1;
     
     Encoder(unsigned char pino);
     unsigned long obter_velocidade();

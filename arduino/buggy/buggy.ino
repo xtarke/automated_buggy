@@ -2,13 +2,15 @@
 #include "Motores.h"
 #include "Ultrassom.h"
 #include "Encoder.h"
+#include "Baterias.h"
 
 
 
 Motores mot;
 Ultrassom sensor_1(Ultrassom::ECHO1, Ultrassom::TRIG1);
-Encoder enc_1 (Encoder::D1);
 Encoder enc_0 (Encoder::D0);
+
+Baterias bats;
 
 int teste = 0;
 
@@ -19,7 +21,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial); 
 
-  //mot.frente(170);
+ // mot.frente(170);
 
 }
 
@@ -47,12 +49,16 @@ void loop() {
 //    mot.parar();
 //  }
 
-  enc_1.atualizar();
+  //enc_0.atualizar();
 
 
   if (millis() - timeold >= 1000){
-    //Serial.println(enc_1.obter_velocidade());
+    //Serial.println(enc_0.obter_velocidade());
     timeold = millis();
+
+    Serial.println(bats.obter_bateria_0());
+    Serial.println(bats.obter_bateria_1());
+    
   }
 
 

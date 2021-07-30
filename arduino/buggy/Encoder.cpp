@@ -10,13 +10,13 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-unsigned long Encoder::pulsos_d0 = 0;
-unsigned long Encoder::pulsos_d1 = 0;
+volatile unsigned long Encoder::pulsos_d0 = 0;
+volatile unsigned long Encoder::pulsos_d1 = 0;
 
 Encoder::Encoder(unsigned char pino)
 {
   /* Configuração dos pinos */
-  pinMode(pino, INPUT_PULLUP);
+  pinMode(pino, INPUT);
 
   tempo = 0;
   
@@ -43,19 +43,23 @@ Encoder::Encoder(unsigned char pino)
 ISR(PCINT0_vect)
 {
   /* Teste para D0 */
-  if (PINB & (1 << PB5))
-    Encoder::pulsos_d0++;
+  if (PINB & (1 << PB5)){
+    Encoder::pulsos_d0++;    
+  }
 
   /* Teste para D1 */
   if (PINB & (1 << PB4))
     Encoder::pulsos_d1++;
+
+
+
 }
 
 void Encoder::atualizar(){
   unsigned long pulsos = 0;
   
-  /* Mede a velocidade a cada 1000 ms */
-  if (millis() - tempo >= 1000)
+  /* Mede a velocidade a cada 500 ms */
+  if (millis() - tempo >= 500)
   {
     /* Desabilita interrupcao durante o calculo */       
     if (_pino == Encoder::D0){
@@ -71,7 +75,7 @@ void Encoder::atualizar(){
     }
       
     /* velocidade = (60 * 1000 / pulsos_por_volta ) / (millis() - tempo) * pulsos; */
-    velocidade = pulsos / (millis() - tempo);          //Rever: usar 500ms para multipliar por 2
+    velocidade = pulsos << 2;          //Rever: usar 500ms para multipliar por 2
     tempo = millis();
 
     if (_pino == Encoder::D0)
