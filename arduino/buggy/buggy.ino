@@ -1,9 +1,18 @@
+/*
+  buggy.ino - Aplicação exemplo para o buggy 4x4
+  
+  - Exibe os dados dos sensores pelo terminal UART 9600 bps.
+  - Recebe comandos da serial para movimentação dos motores.
+  
+  Created by Renan Augusto Starke, July 26, 2021.  
+  Released into the public domain.
+*/
+
 
 #include "Motores.h"
 #include "Ultrassom.h"
 #include "Encoder.h"
 #include "Baterias.h"
-
 
 /* Tarefas básicas do exemplo */
 void tarefa_1();
@@ -40,13 +49,9 @@ void loop() {
   encoder_0.atualizar();
   ultrassom_1.atualizar();
 
-
-  
+ 
   tarefa_1();
   tarefa_2();
-
-
-
 }
 
 /* Tarefa 2: comandos da serial */
