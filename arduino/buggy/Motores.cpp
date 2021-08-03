@@ -69,6 +69,6 @@ void Motores::esquerda(unsigned char velocidade){
   /* digitalWrite(M2N, HIGH);
   digitalWrite(M1, HIGH);  */
 
-  analogWrite(M2N, velocidade);
-  analogWrite(M1, velocidade);
+  analogWrite(M2, velocidade);
+  analogWrite(M1N, velocidade);
 }

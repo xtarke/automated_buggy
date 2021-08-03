@@ -5,71 +5,107 @@
 #include "Baterias.h"
 
 
+/* Tarefas básicas do exemplo */
+void tarefa_1();
+void tarefa_2();
+volatile bool exibir_estado = true;
 
-Motores mot;
-Ultrassom sensor_1(Ultrassom::ECHO1, Ultrassom::TRIG1);
-Encoder enc_0 (Encoder::D0);
+/* Instâncias das classe dos sensores/atuadores */
+Motores motores;
+Baterias baterias;
+Ultrassom ultrassom_1(Ultrassom::ECHO1, Ultrassom::TRIG1);
+Encoder encoder_0 (Encoder::D0);
 
-Baterias bats;
-
-int teste = 0;
-
-
+/* Configuração e mensagem inicial */
 void setup() {
-  // put your setup code here, to run once:
-
+  
   Serial.begin(9600);
   while (!Serial); 
 
- // mot.frente(170);
+  Serial.println("Teste buggy 4x4");
+  Serial.println("f: mover para frente");
+  Serial.println("r: mover para trás");
+  Serial.println("e: mover para esquerda");
+  Serial.println("d: mover para direita");  
+  Serial.println("s: exibir estado dos sensores a cada 1s");
+  Serial.println("i: exibir descrição das dos estados");
+
+  delay(5000);  
 
 }
 
+/* Loop de atualização do sensores e das tarefas */
 void loop() {
-  // put your main code here, to run repeatedly:
-
-  static unsigned long timeold = 0;
-  //
-
-//  if (teste){
-//  
-//    mot.frente(150);
-//    delay(3000);     
-//  
-//    mot.tras(150);
-//    delay(3000); 
-//
-//    mot.direita(150);
-//    delay(3000); 
-//
-//    mot.esquerda(150);
-//    delay(3000); 
-//
-//    teste = 0;
-//    mot.parar();
-//  }
-
-  //enc_0.atualizar();
-
-
-  if (millis() - timeold >= 1000){
-    //Serial.println(enc_0.obter_velocidade());
-    timeold = millis();
-
-    Serial.println(bats.obter_bateria_0());
-    Serial.println(bats.obter_bateria_1());
-    
-  }
-
-
-  //unsigned long dist = sensor_1.medir();
   
-
-  //delay(1000);
+  encoder_0.atualizar();
+  ultrassom_1.atualizar();
 
 
   
+  tarefa_1();
+  tarefa_2();
 
-  
+
 
 }
+
+/* Tarefa 2: comandos da serial */
+void tarefa_1(){
+
+  /* Caso tenha recebido algum dado do PC */
+  if (Serial.available()) {
+     char dado_recebido = Serial.read();
+     
+      if (dado_recebido == 'p')
+          motores.parar();
+          
+      if (dado_recebido == 'f')
+          motores.frente(200);
+      
+      if (dado_recebido == 'r')
+          motores.tras(200);
+      
+      if (dado_recebido == 'e')
+          motores.esquerda(150);
+          
+      if (dado_recebido == 'd')
+          motores.direita(150);
+
+      if (dado_recebido == 's') {
+        if (exibir_estado == true)
+          exibir_estado = false;
+        else
+          exibir_estado = true;        
+      }
+      
+      if (dado_recebido == 'i') {
+        Serial.println("Bat0\tBat1\tVelocidade\tDistância");
+      }
+
+  }
+}
+
+/* Exibe dados dos sensores */
+void tarefa_2(){
+  static unsigned long tempo_atual = 0;
+
+  /* Escalonamento a cada 1s. Se ativado a exibição */
+  if ((exibir_estado) && (millis() - tempo_atual >= 1000)){
+    
+    Serial.print(baterias.obter_bateria_0());
+    Serial.print("\t");
+    Serial.print(baterias.obter_bateria_1());
+    Serial.print("\t");
+    Serial.print(encoder_0.obter_velocidade());
+    Serial.print("\t");
+    Serial.print(ultrassom_1.obter_distancia());
+    Serial.print("\t");
+    
+    Serial.println("");
+    
+    tempo_atual = millis();    
+  }  
+}
+
+
+

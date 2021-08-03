@@ -35,3 +35,19 @@ unsigned long Ultrassom::medir(){
   return distancia;
 }
 
+unsigned long Ultrassom::obter_distancia(){
+  return distancia;
+}
+
+
+void Ultrassom::atualizar(){
+    
+  /* Mede a distância a cada 500 ms */
+  if (millis() - tempo >= 500)
+  {
+
+    distancia = medir();          
+    tempo = millis();   
+  }
+}
+
