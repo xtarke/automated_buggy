@@ -23,7 +23,7 @@ Linha::Linha()
   pinMode(R_TCRT, INPUT);
   pinMode(L_TCRT, INPUT);
 
-  pinMode(13, OUTPUT);
+//   pinMode(13, OUTPUT);
 
   /* Filtro do sensor óptico é feito por
    * counting debouncer no overflow do timer 2

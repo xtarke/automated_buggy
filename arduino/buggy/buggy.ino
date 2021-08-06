@@ -13,6 +13,7 @@
 #include "Ultrassom.h"
 #include "Encoder.h"
 #include "Baterias.h"
+#include "Linha.h"
 
 /* Tarefas básicas do exemplo */
 void tarefa_1();
@@ -22,8 +23,10 @@ volatile bool exibir_estado = true;
 /* Instâncias das classe dos sensores/atuadores */
 Motores motores;
 Baterias baterias;
+Linha seguidor_linha;
 Ultrassom ultrassom_1(Ultrassom::ECHO1, Ultrassom::TRIG1);
 Encoder encoder_0 (Encoder::D0);
+
 
 /* Configuração e mensagem inicial */
 void setup() {
@@ -62,21 +65,16 @@ void tarefa_1(){
      char dado_recebido = Serial.read();
      
       if (dado_recebido == 'p')
-          motores.parar();
-          
-      if (dado_recebido == 'f')
-          motores.frente(200);
-      
-      if (dado_recebido == 'r')
-          motores.tras(200);
-      
-      if (dado_recebido == 'e')
-          motores.esquerda(150);
-          
-      if (dado_recebido == 'd')
+          motores.parar();          
+      else if (dado_recebido == 'f')
+          motores.frente(200);      
+      else if (dado_recebido == 'r')
+          motores.tras(200);      
+      else if (dado_recebido == 'e')
+          motores.esquerda(150);          
+      else if (dado_recebido == 'd')
           motores.direita(150);
-
-      if (dado_recebido == 's') {
+      else if (dado_recebido == 's') {
         if (exibir_estado == true)
           exibir_estado = false;
         else
@@ -105,6 +103,9 @@ void tarefa_2(){
     Serial.print("\t");
     Serial.print(ultrassom_1.obter_distancia());
     Serial.print("\t");
+    Serial.print(seguidor_linha.obter_esquerda());
+    Serial.print("\t");
+    Serial.print(seguidor_linha.obter_direita());
     
     Serial.println("");
     
